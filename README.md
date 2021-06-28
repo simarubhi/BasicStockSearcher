@@ -2,11 +2,11 @@
 
 ## Made with React and the Finnhub finnance API
 
-This project allows use to enter stock symbols for example:**
-"AAPL" : Apple**
-"MSFT" : Microsoft**
-"GOOG" : Alphabet Inc**
-"BINANCE:BTCUSDT" : Bitcoin USD\_\_
+This project allows use to enter stock symbols for example:  
+"AAPL" : Apple  
+"MSFT" : Microsoft  
+"GOOG" : Alphabet Inc  
+"BINANCE:BTCUSDT" : Bitcoin USD
 
 and the last trade price will be returned.
 
