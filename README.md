@@ -8,8 +8,10 @@ This project allows use to enter stock symbols for example:
 "GOOG" : Alphabet Inc  
 "BINANCE:BTCUSDT" : Bitcoin USD
 
-and the last trade price will be returned.
+and the last trade price will be returned
+
+_**Note:** App will only work during open US Stock Market Hours (9:30 a.m. to 4 p.m. Eastern time)_
 
 ## Technology/Features Used
 
-React, Hooks, State, Sass(scss), NPM, REST API, Web Sockets
+React JS, Hooks, State, Sass(scss), NPM, REST API, Web Sockets
