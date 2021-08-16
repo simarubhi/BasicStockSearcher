@@ -3,7 +3,9 @@
 ## Made with React and the Finnhub finance API
 
 _**Note:** Primary code found in src/components/Card.js_  
-_**Note:** Forking repository without adding Finnhub API Token to .env will cause app to not work! Get yours here: https://finnhub.io/register_
+_**Note:** Forking repository without adding Finnhub API Token to .env will cause app to not work!_
+
+_Get yours here: https://finnhub.io/register_
 
 ## How it works
 
