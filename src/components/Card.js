@@ -1,74 +1,92 @@
 import React, { useState } from 'react';
-const socket = new WebSocket('wss://ws.finnhub.io?token=c378702ad3ib6g7ehurg');
+const token = process.env.REACT_APP_API_TOKEN;
+const socket = new WebSocket(`wss://ws.finnhub.io?token=${token}`);
 
 const Card = () => {
-    // Use as controlled input
-    const [stockQuery, setStockQuery] = useState('');
-    // Stored input value
-    const [stock, setStock] = useState();
-    // Returned Stock Price
-    const [stockPrice, setStockPrice] = useState();
-    // Add or remove stock
-    const [add, setAdd] = useState(true);
+	// Use as controlled input
+	const [stockQuery, setStockQuery] = useState('');
+	// Stored input value
+	const [stock, setStock] = useState();
+	// Returned Stock Price
+	const [stockPrice, setStockPrice] = useState();
+	// Add or remove stock
+	const [add, setAdd] = useState(true);
 
-    // Add stock to socket
-    socket.addEventListener('open', () => {
-        sendData();
-    });
-    
-    const formSubmit = event => {
-        event.preventDefault();
-        if(stockQuery == null) return;
-        if(add === true) {
-            sendData();
-            setStock(stockQuery);
-            setStockQuery('');
-            setAdd(false);
-        }
+	// Add stock to socket
+	socket.addEventListener('open', () => {
+		sendData();
+	});
 
-        if(add === false) {
-            setAdd(true);
-            removeData();
-            setStock();
-            setStockPrice();
-        }
-    }
+	const formSubmit = event => {
+		event.preventDefault();
+		if (stockQuery == null) return;
+		if (add === true) {
+			sendData();
+			setStock(stockQuery);
+			setStockQuery('');
+			setAdd(false);
+		}
 
-    const sendData = () => {
-        socket.send(JSON.stringify({'type':'subscribe', 'symbol': stockQuery}));
-    }
+		if (add === false) {
+			setAdd(true);
+			removeData();
+			setStock();
+			setStockPrice();
+		}
+	};
 
-    const removeData = () => {
-        socket.send(JSON.stringify({'type':'unsubscribe', 'symbol': stock}))
-    }
+	const sendData = () => {
+		socket.send(JSON.stringify({ type: 'subscribe', symbol: stockQuery }));
+	};
 
-    // Listen for messages
-    socket.addEventListener('message', event => {
-        let data = JSON.parse(event.data);
-        if (data.type !== "trade") return;
-        if(data.data[0].p !== stockPrice){
-            setStockPrice(data.data[0].p);
-        }
-        if(add === true) setStockPrice();
-    });
+	const removeData = () => {
+		socket.send(JSON.stringify({ type: 'unsubscribe', symbol: stock }));
+	};
 
-    return (
-        <div className='card'>
+	// Listen for messages
+	socket.addEventListener('message', event => {
+		let data = JSON.parse(event.data);
+		if (data.type !== 'trade') return;
+		if (data.data[0].p !== stockPrice) {
+			setStockPrice(data.data[0].p);
+		}
+		if (add === true) setStockPrice();
+	});
 
-            <h1 className='title'>Stock Searcher</h1>
+	return (
+		<div className='card'>
+			<h1 className='title'>Stock Searcher</h1>
 
-            <form className='search-form' onSubmit={formSubmit}>
+			<form className='search-form' onSubmit={formSubmit}>
+				<input
+					className='search-input'
+					type='text'
+					placeholder='Search Stock Symbol Here'
+					value={stockQuery}
+					onChange={event => setStockQuery(event.target.value)}
+				/>
 
-                <input className='search-input' type='text' placeholder='Search Stock Symbol Here' value={stockQuery} onChange={event => setStockQuery(event.target.value)}/>
+				<button
+					className='search-btn'
+					type='submit'
+					value='submit'
+					style={
+						add
+							? { background: '#16c427' }
+							: { background: '#e74b09' }
+					}
+				>
+					{add ? 'Search' : 'Remove'}
+				</button>
+			</form>
 
-                <button className='search-btn' type='submit' value='submit' style={add ? {background: '#16c427'} : {background: '#e74b09'}}>{add ? 'Search' : 'Remove'}</button>
+			{stockPrice && (
+				<h1 className='stock-price'>
+					{stock} Last Trade Price: ${stockPrice}
+				</h1>
+			)}
+		</div>
+	);
+};
 
-            </form>
-
-            {stockPrice && <h1 className='stock-price'>{stock} Last Trade Price: ${stockPrice}</h1>}
-
-        </div>
-    )
-}
-
-export default Card
+export default Card;
